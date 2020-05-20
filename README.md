@@ -1,2 +1,0 @@
-# joseph
-Created with CodeSandbox
