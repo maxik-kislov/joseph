@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
+import debounce from "lodash/debounce";
 
 import Card from "./components/Card";
 import TweetStore from "./stores/TweetStore";
@@ -17,9 +18,27 @@ class App extends Component {
     // as I'm loading initialData within CDM
     // wanna make sure tweetStore is fully initialised before interaction
     if (this.state.pageIsReady) {
-      this.startTimer();
+      // const debounced = debounce(this.getUserPosition, 1000);
+      // debounced();
+      window.addEventListener("scroll", () => {
+        console.log(window);
+        // positon bottom of page do x
+        if (window.scrollY === 0) {
+          this.startTimer();
+        }
+
+        // top of page do y
+      });
     }
   }
+
+  // getUserPosition() {
+  //   window.addEventListener("scroll", this.startTimer);
+
+  //   // positon bottom of page do x
+
+  //   // top of page do y
+  // }
 
   async initialiseStores() {
     const tweets = await TweetService.getInitialTweets();
@@ -27,18 +46,19 @@ class App extends Component {
     this.tweetStore = tweetStore;
     // allow page to be ready for interaction
     this.setState({ pageIsReady: true });
+    // this.tweetStore.getOldTweets();
   }
 
-  startTimer() {
+  startTimer = () => {
     if (!this.timerId && !this.tweetStore.error) {
-      this.timerId = setInterval(() => {
+      this.timerId = setTimeout(() => {
         if (this.tweetStore.error) {
           this.stopTimer();
         }
         this.tweetStore.getTweets();
       }, 2000);
     }
-  }
+  };
 
   stopTimer() {
     clearInterval(this.timerId);

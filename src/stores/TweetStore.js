@@ -37,6 +37,14 @@ export class TweetStore {
     }
   }
 
+  @action async getOldTweets() {
+    const lowestId = this.tweets.sort((a, b) => a.id - b.id);
+
+    const oldTweets = await TweetService.fetchPreviousTweets(lowestId[0].id);
+
+    this.tweets.unshift(...oldTweets);
+  }
+
   /**
    * @param {object} lastTweet - e.g. { id: 5, title: 'hello world' } etc...
    */

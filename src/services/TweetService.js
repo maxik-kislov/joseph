@@ -60,7 +60,20 @@ export async function fetchNewTweet(id) {
   }
 }
 
+export async function fetchPreviousTweets(id) {
+  // get the previous 20 tweets
+  // based on the lowest Id of the Tweets Array
+  let data = await getData(`${URL}/api?count=20&id=${id}&direction=-1`, 5);
+
+  if (data) {
+    return data;
+  }
+
+  return console.log("fetching old tweets failed recursivly");
+}
+
 export default {
   getInitialTweets,
-  fetchNewTweet
+  fetchNewTweet,
+  fetchPreviousTweets
 };
